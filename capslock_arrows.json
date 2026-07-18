@@ -1,0 +1,261 @@
+{
+  "title": "CapsLock + Vim Arrows",
+  "rules": [
+    {
+      "description": "CapsLock: hold enables arrows, tap sends caps_lock (prevents IME switch)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "caps_lock",
+            "modifiers": {}
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "caps_lock_held",
+                "value": 1
+              }
+            }
+          ],
+          "to_if_alone": [
+            {
+              "key_code": "caps_lock"
+            }
+          ],
+          "to_after_key_up": [
+            {
+              "set_variable": {
+                "name": "caps_lock_held",
+                "value": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "CapsLock + n → ↓",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "n",
+            "modifiers": {}
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "caps_lock_held",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "down_arrow",
+              "repeat": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "CapsLock + p → ↑",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "p",
+            "modifiers": {}
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "caps_lock_held",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "up_arrow",
+              "repeat": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "CapsLock + h → ←",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "h",
+            "modifiers": {}
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "caps_lock_held",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "repeat": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "CapsLock + l → →",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "l",
+            "modifiers": {}
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "caps_lock_held",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "repeat": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "CapsLock + u → ⌫ (backward delete)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {}
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "caps_lock_held",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "delete_or_backspace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "CapsLock + k → ⌦ (forward delete)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "k",
+            "modifiers": {}
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "caps_lock_held",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "delete_forward"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "CapsLock + , → line start",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "comma",
+            "modifiers": {}
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "caps_lock_held",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": ["left_command"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "CapsLock + . → line end",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "period",
+            "modifiers": {}
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "caps_lock_held",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": ["left_command"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "CapsLock + v → select to end of document",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "v",
+            "modifiers": {}
+          },
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "caps_lock_held",
+              "value": 1
+            }
+          ],
+          "to": [
+            {
+              "key_code": "down_arrow",
+              "modifiers": ["left_command", "left_shift"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

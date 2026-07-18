@@ -1,0 +1,13 @@
+# OS
+.DS_Store
+
+# Editor
+*.swp
+*~
+
+# Local secrets / machine-specific
+.env
+*.local
+
+# Logs
+*.log
