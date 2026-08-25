@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+OCDIR="${OCPI_DIR:-$HOME/case/.ocpi}"
+
+# ===== 数据目录隔离:配置/模型/会话/扩展全部落入沙盒 =====
+export PI_CODING_AGENT_DIR="$OCDIR/agent"
+
+# ===== 离线启动:不更新、不检查版本、不埋点 =====
+export PI_OFFLINE=1
+export PI_SKIP_VERSION_CHECK=1
+export PI_TELEMETRY=0
+
+mkdir -p "$OCDIR/agent"
+
+# ===== 同步全局插件到隔离环境(软链接,实时生效) =====
+GLOBAL_EXT="$HOME/.pi/agent/extensions"
+OCPI_EXT="$OCDIR/agent/extensions"
+if [[ -d "$GLOBAL_EXT" ]] && [[ ! -e "$OCPI_EXT" ]]; then
+  ln -s "$GLOBAL_EXT" "$OCPI_EXT"
+fi
+
+GLOBAL_NPM="$HOME/.pi/agent/npm"
+OCPI_NPM="$OCDIR/agent/npm"
+if [[ -d "$GLOBAL_NPM" ]] && [[ ! -e "$OCPI_NPM" ]]; then
+  ln -s "$GLOBAL_NPM" "$OCPI_NPM"
+fi
+
+# ===== 同步全局 settings.json packages 字段(保持其他配置隔离) =====
+GLOBAL_SETTINGS="$HOME/.pi/agent/settings.json"
+OCPI_SETTINGS="$OCDIR/agent/settings.json"
+if [[ -f "$GLOBAL_SETTINGS" ]] && [[ -f "$OCPI_SETTINGS" ]]; then
+  GLOBAL_PKGS=$(jq -r '.packages // [] | length > 0' "$GLOBAL_SETTINGS" 2>/dev/null || echo "false")
+  if [[ "$GLOBAL_PKGS" == "true" ]]; then
+    OCPI_PKGS=$(jq -r '.packages // [] | length > 0' "$OCPI_SETTINGS" 2>/dev/null || echo "false")
+    if [[ "$OCPI_PKGS" != "true" ]]; then
+      jq --slurpfile global "$GLOBAL_SETTINGS" '.packages = ($global[0].packages // [])' "$OCPI_SETTINGS" > "$OCPI_SETTINGS.tmp"
+      mv "$OCPI_SETTINGS.tmp" "$OCPI_SETTINGS"
+    fi
+  fi
+fi
+
+# ===== 模型模板(唯一维护点):每次运行与 models.json 比对,不一致则同步 =====
+MODELS_JSON='{
+  "providers": {
+    "omlx": {
+      "baseUrl": "http://127.0.0.1:8004/v1",
+      "api": "openai-completions",
+      "apiKey": "omlx",
+      "models": [
+        { "id": "fast(reasoning)", "name": "fast(reasoning)", "reasoning": true, "contextWindow": 262144, "maxTokens": 81920 },
+        { "id": "fast(reasoning):qwen36-35b-r-code", "name": "fast(code)", "reasoning": true, "contextWindow": 262144, "maxTokens": 81920 },
+        { "id": "quality(high)",   "name": "quality(high)", "contextWindow": 131072, "maxTokens": 131072 },
+        { "id": "uncensored",      "name": "uncensored", "contextWindow": 262144, "maxTokens": 81920 }
+      ]
+    }
+  }
+}'
+
+# ===== 缺失或不一致时原子同步(pi 只读 models.json,不会覆盖) =====
+if [[ ! -f "$OCDIR/agent/models.json" ]] || ! cmp -s "$OCDIR/agent/models.json" <(printf '%s\n' "$MODELS_JSON"); then
+  printf '%s\n' "$MODELS_JSON" > "$OCDIR/agent/models.json.tmp"
+  mv "$OCDIR/agent/models.json.tmp" "$OCDIR/agent/models.json"
+fi
+
+exec pi "$@"

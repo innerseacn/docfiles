@@ -109,12 +109,6 @@ source ${ZIM_HOME}/init.zsh
 export HOMEBREW_API_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/api
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles
 
-# lean-ctx shell hook — begin
-if [ -f "/Users/innersea/.config/lean-ctx/shell-hook.zsh" ]; then
-. "/Users/innersea/.config/lean-ctx/shell-hook.zsh"
-fi
-# lean-ctx shell hook — end
-
 # SSH SOCKS tunnel via ally
 alias tu="ssh -D 1080 -f -N ally && export ALL_PROXY=socks5h://127.0.0.1:1080 && echo 'SOCKS tunnel up, ALL_PROXY set'"
 alias td="pkill -f 'ssh -D 1080' 2>/dev/null; unset ALL_PROXY; echo 'Tunnel down, ALL_PROXY unset'"
@@ -125,10 +119,10 @@ export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_DEFAULT_COMMAND_FOR_FIND_FILE='rg --files --hidden --glob "!.git"'
 export FZF_DEFAULT_OPTS="--layout=reverse --preview 'bat --color=always --style=numbers,changes {}' --preview-window right:50%:wrap"    
 export HF_ENDPOINT=https://hf-mirror.com
+export HF_HUB_DISABLE_XET=1
 export HOMEBREW_NO_ENV_HINTS=1
 
 # Bun / npm domestic mirror
-export BUN_INSTALL="https://registry.npmmirror.com/bun"
 export NPM_CONFIG_REGISTRY="https://registry.npmmirror.com"
 
 # OpenCode native background subagents (required by oh-my-opencode-slim)
@@ -136,3 +130,20 @@ export OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true
 
 eval "$(_HF_COMPLETE=zsh_source hf)"
 eval "$(zoxide init zsh)"
+
+# >>> Claude Code Haha PATH >>>
+export PATH="$HOME/.local/bin:$PATH"
+# <<< Claude Code Haha PATH <<<
+
+# >>> Python 3.12 user scripts >>>
+case ":$PATH:" in
+  *":/Users/innersea/Library/Python/3.12/bin:"*) ;;
+  *) export PATH="/Users/innersea/Library/Python/3.12/bin:$PATH" ;;
+esac
+# <<< Python 3.12 user scripts <<<
+
+# GBrain (PGLite, local omlx embedding)
+export PATH="$HOME/.bun/bin:$PATH"
+export OPENAI_BASE_URL=http://127.0.0.1:8004/v1
+export OPENAI_API_KEY=local
+
