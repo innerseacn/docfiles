@@ -5,6 +5,7 @@ OCDIR="${OCPI_DIR:-$HOME/case/.ocpi}"
 
 # ===== 数据目录隔离:配置/模型/会话/扩展全部落入沙盒 =====
 export PI_CODING_AGENT_DIR="$OCDIR/agent"
+export XDG_CONFIG_HOME="$OCDIR"
 
 # ===== 离线启动:不更新、不检查版本、不埋点 =====
 export PI_OFFLINE=1
@@ -45,9 +46,9 @@ MODELS_JSON='{
       "api": "openai-completions",
       "apiKey": "omlx",
       "models": [
+        { "id": "quality(high)", "name": "quality(high)", "reasoning": true, "thinkingLevelMap": { "off": "off", "minimal": null, "low": "low", "medium": "medium", "high": null, "xhigh": "xhigh" }, "input": ["text", "image"], "contextWindow": 200000, "maxTokens": 200000 },
         { "id": "fast(reasoning)", "name": "fast(reasoning)", "reasoning": true, "contextWindow": 262144, "maxTokens": 81920 },
         { "id": "test", "name": "test", "reasoning": true, "contextWindow": 262144, "maxTokens": 81920 },
-        { "id": "quality(high)", "name": "quality(high)", "reasoning": true, "thinkingLevelMap": { "off": "off", "minimal": null, "low": "low", "medium": "medium", "high": null, "xhigh": "xhigh" }, "input": ["text", "image"], "contextWindow": 200000, "maxTokens": 200000 },
         { "id": "uncensored", "name": "uncensored", "contextWindow": 262144, "maxTokens": 81920 }
       ]
     }
