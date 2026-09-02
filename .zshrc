@@ -1,3 +1,13 @@
+# Fast PATH: only include directories that exist (removes ~16 dead paths)
+_build_fast_path() {
+  local p new_path=""
+  for p in $(echo "$PATH" | tr ":" "\n"); do
+    [ -d "$p" ] && new_path="${new_path:+$new_path:}$p"
+  done
+  export PATH="$new_path"
+}
+_build_fast_path
+
 # Start configuration added by Zim Framework install {{{
 #
 # User configuration sourced by interactive shells
