@@ -121,6 +121,7 @@ export FZF_DEFAULT_OPTS="--layout=reverse --preview 'bat --color=always --style=
 export HF_ENDPOINT=https://hf-mirror.com
 export HF_HUB_DISABLE_XET=1
 export HOMEBREW_NO_ENV_HINTS=1
+export EDITOR=nvim
 
 # Bun / npm domestic mirror
 export NPM_CONFIG_REGISTRY="https://registry.npmmirror.com"
@@ -131,16 +132,9 @@ export OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true
 eval "$(_HF_COMPLETE=zsh_source hf)"
 eval "$(zoxide init zsh)"
 
-# >>> Claude Code Haha PATH >>>
-export PATH="$HOME/.local/bin:$PATH"
-# <<< Claude Code Haha PATH <<<
 
-# >>> Python 3.12 user scripts >>>
-case ":$PATH:" in
-  *":/Users/innersea/Library/Python/3.12/bin:"*) ;;
-  *) export PATH="/Users/innersea/Library/Python/3.12/bin:$PATH" ;;
-esac
-# <<< Python 3.12 user scripts <<<
+export PATH="$HOME/.local/bin:$PATH"
+
 
 # GBrain (PGLite, local omlx embedding)
 export PATH="$HOME/.bun/bin:$PATH"
