@@ -6,6 +6,7 @@ OCDIR="${OCPI_DIR:-$HOME/case/.ocpi}"
 # ===== 数据目录隔离:配置/模型/会话/扩展全部落入沙盒 =====
 export PI_CODING_AGENT_DIR="$OCDIR/agent"
 export XDG_CONFIG_HOME="$OCDIR"
+export GBRAIN_HOME="$OCDIR"
 
 # ===== 离线启动:不更新、不检查版本、不埋点 =====
 export PI_OFFLINE=1
