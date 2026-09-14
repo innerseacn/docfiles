@@ -47,7 +47,7 @@ MODELS_JSON='{
       "api": "openai-completions",
       "apiKey": "omlx",
       "models": [
-        { "id": "quality(high)", "name": "quality(high)", "reasoning": true, "thinkingLevelMap": { "off": "off", "minimal": null, "low": "low", "medium": "medium", "high": null, "xhigh": "xhigh" }, "input": ["text", "image"], "contextWindow": 150000, "maxTokens": 150000 },
+        { "id": "quality(high)", "name": "quality(high)", "reasoning": true, "thinkingLevelMap": { "off": "off", "minimal": null, "low": "low", "medium": "medium", "high": null, "xhigh": "xhigh" }, "input": ["text", "image"], "contextWindow": 200000, "maxTokens": 100000 },
         { "id": "fast(reasoning)", "name": "fast(reasoning)", "reasoning": true, "contextWindow": 262144, "maxTokens": 81920 },
         { "id": "test", "name": "test", "reasoning": true, "contextWindow": 262144, "maxTokens": 81920 },
         { "id": "uncensored", "name": "uncensored", "contextWindow": 262144, "maxTokens": 81920 }
