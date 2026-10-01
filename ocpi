@@ -34,7 +34,8 @@ OCPI_SETTINGS="$OCDIR/agent/settings.json"
 if [[ -f "$GLOBAL_SETTINGS" ]] && [[ -f "$OCPI_SETTINGS" ]]; then
   GLOBAL_PKGS=$(jq -r '.packages // [] | length > 0' "$GLOBAL_SETTINGS" 2>/dev/null || echo "false")
   if [[ "$GLOBAL_PKGS" == "true" ]]; then
-    jq --slurpfile global "$GLOBAL_SETTINGS" '.packages = ($global[0].packages // [])' "$OCPI_SETTINGS" > "$OCPI_SETTINGS.tmp"
+    # 剔除 ocpi 沙盒禁用的包(2026-09: pi-web-access 联网工具,离线隔离)。字符串/对象形式条目均匹配。
+    jq --slurpfile global "$GLOBAL_SETTINGS" '.packages = (($global[0].packages // []) | map(select((if type == "string" then . else (.source // "") end) != "npm:pi-web-access")))' "$OCPI_SETTINGS" > "$OCPI_SETTINGS.tmp"
     mv "$OCPI_SETTINGS.tmp" "$OCPI_SETTINGS"
   fi
 fi
@@ -60,6 +61,14 @@ MODELS_JSON='{
 if [[ ! -f "$OCDIR/agent/models.json" ]] || ! cmp -s "$OCDIR/agent/models.json" <(printf '%s\n' "$MODELS_JSON"); then
   printf '%s\n' "$MODELS_JSON" > "$OCDIR/agent/models.json.tmp"
   mv "$OCDIR/agent/models.json.tmp" "$OCDIR/agent/models.json"
+fi
+
+# ===== 限定可选模型范围:只暴露 omlx,屏蔽 openai 目录 =====
+# 全局 shell 里的 OPENAI_API_KEY 会让 pi 误判 openai provider 已认证,
+# 于是在 /model 里列出 44 个实际打不通的 OpenAI 模型(含 gpt-*-codex)。
+# 显式传入 --models 时以其为准(args.js 后者覆盖前者)。
+if ! printf '%s\n' "$@" | grep -qxF -- '--models'; then
+  set -- --models 'omlx/*' "$@"
 fi
 
 exec pi "$@"

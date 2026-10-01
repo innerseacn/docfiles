@@ -147,7 +147,11 @@ export PATH="$HOME/.local/bin:$PATH"
 
 
 # GBrain (PGLite, local omlx embedding)
+# OPENAI_BASE_URL / OPENAI_API_KEY 已移至 ~/.gbrain/.env —— 全局导出会让 pi
+# 误判 openai provider 已认证,于是在 /model 里列出 44 个打不通的 OpenAI 模型。
 export PATH="$HOME/.bun/bin:$PATH"
-export OPENAI_BASE_URL=http://127.0.0.1:8004/v1
-export OPENAI_API_KEY=local
 
+
+# Ghidra (brew install ghidra) —— JPype/PyGhidra 与 headless 分析需要
+export GHIDRA_INSTALL_DIR="/opt/homebrew/opt/ghidra/libexec"
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
